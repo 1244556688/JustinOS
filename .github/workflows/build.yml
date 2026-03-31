@@ -1,34 +1,11 @@
-name: Build JustinOS ISO
-
-on:
-  push:
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: 下載專案
-      uses: actions/checkout@v3
-
-    - name: 安裝 live-build
-      run: |
-        sudo apt update
-        sudo apt install -y live-build
-
-    - name: 設定權限
-      run: |
-        chmod +x auto/config
-        chmod +x auto/build
-
-    - name: 建置 ISO
-      run: |
-        sudo auto/config
-        sudo auto/build
-
-    - name: 上傳 ISO
-      uses: actions/upload-artifact@v4
-      with:
-        name: JustinOS
-        path: live-image-amd64.hybrid.iso
+- name: Configure Live-Build
+  run: |
+    # 使用 env -i 只保留必要的 PATH，並清理其餘可能干擾的環境變數
+    env -i PATH="$PATH" lb config \
+        --mode debian \
+        --distribution bookworm \
+        --architectures amd64 \
+        --binary-images iso-hybrid \
+        --debian-installer false \
+        --bootappend-live "boot=live components quiet" \
+        --archive-areas "main contrib non-free non-free-firmware"
