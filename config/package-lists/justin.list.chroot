@@ -1,0 +1,10 @@
+bash
+coreutils
+nano
+vim
+htop
+python3
+python3-pip
+build-essential
+git
+curl
